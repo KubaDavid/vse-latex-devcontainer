@@ -7,16 +7,9 @@
       "extensions": [
         "james-yu.latex-workshop",
         "ms-azuretools.vscode-docker",
-        "esbenp.prettier-vscode" // Prettier extension
-      ],
-      "settings": {
-        "terminal.integrated.profiles.linux": {
-          "zsh": {
-            "path": "/bin/zsh"
-          }
-        },
-        "terminal.integrated.defaultProfile.linux": "zsh"
-      }
+        "esbenp.prettier-vscode",
+        "ms-vscode-remote.remote-containers"
+      ]
     }
   },
   "postCreateCommand": "./.devcontainer/postCreateCommand.sh"
