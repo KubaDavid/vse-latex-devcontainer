@@ -1,0 +1,65 @@
+version: '3'
+
+vars:
+  MAIN_FILE: prace.tex
+  TEXT_DIR: text
+
+tasks:
+  default:
+    desc: Show available commands
+    cmds:
+      - task --list
+    silent: true
+
+  build:
+    desc: Compile thesis to PDF using latexmk
+    dir: "{{.TEXT_DIR}}"
+    cmds:
+      - latexmk -pdf -synctex=1 -interaction=nonstopmode -file-line-error --shell-escape {{.MAIN_FILE}}
+    sources:
+      - "{{.TEXT_DIR}}/**/*.tex"
+      - "{{.TEXT_DIR}}/**/*.bib"
+    generates:
+      - "{{.TEXT_DIR}}/prace.pdf"
+
+  watch:
+    desc: Watch for changes and rebuild automatically
+    dir: "{{.TEXT_DIR}}"
+    cmds:
+      - latexmk -pdf -pvc -synctex=1 -interaction=nonstopmode --shell-escape {{.MAIN_FILE}}
+
+  clean:
+    desc: Remove auxiliary files (keep PDF)
+    dir: "{{.TEXT_DIR}}"
+    cmds:
+      - latexmk -c
+
+  clean-all:
+    desc: Remove all generated files including PDF
+    dir: "{{.TEXT_DIR}}"
+    cmds:
+      - latexmk -C
+
+  wordcount:
+    desc: Count words in thesis (texcount)
+    dir: "{{.TEXT_DIR}}"
+    cmds:
+      - texcount -inc -total {{.MAIN_FILE}}
+
+  wordcount-detailed:
+    desc: Detailed word count by section
+    dir: "{{.TEXT_DIR}}"
+    cmds:
+      - texcount -inc -sub {{.MAIN_FILE}}
+
+  check-links:
+    desc: Verify hyperlinks in PDF
+    dir: "{{.TEXT_DIR}}"
+    cmds:
+      - pdflinkchecker prace.pdf
+
+  bib:
+    desc: Run bibtex/biber for bibliography
+    dir: "{{.TEXT_DIR}}"
+    cmds:
+      - biber prace || bibtex prace
